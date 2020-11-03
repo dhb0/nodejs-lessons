@@ -30,6 +30,23 @@ app.use(
   })
 );
 
+app.use(express.static("public"));
+
+//Links Middleware
+app.use((req,res,next)=>{
+  const {userId} = req.session;
+  if(userId){
+    res.locals = {
+      displayLink: true
+    }
+  }else{
+    res.locals = {
+      displayLink: false
+    }
+  }
+  next()
+})
+
 //Flash Message Middleware
 app.use((req, res, next) => {
   res.locals.sessionFlash = req.session.sessionFlash;
@@ -37,7 +54,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static("public"));
+
 
 app.engine("handlebars", exphbs({ helpers: { generateDate } }));
 app.set("view engine", "handlebars");
@@ -51,10 +68,12 @@ app.use(bodyParser.json());
 const main = require("./routes/main");
 const posts = require("./routes/posts");
 const users = require("./routes/users");
+const admin = require("./routes/admin/index")
 
 app.use("/", main);
 app.use("/posts", posts);
 app.use("/users", users);
+app.use("/admin", admin);
 app.listen(port, hostName, () =>
   console.log(`Server is operating: http://${hostName}:${port}`)
 );

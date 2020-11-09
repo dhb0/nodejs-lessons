@@ -8,6 +8,7 @@ const fileUpload = require("express-fileupload");
 const generateDate = require("./helpers/generateDate").generateDate;
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
+var methodOverride = require('method-override')
 
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://127.0.0.1/nodeblog_db", {
@@ -31,6 +32,8 @@ app.use(
 );
 
 app.use(express.static("public"));
+
+app.use(methodOverride('_method'))
 
 //Links Middleware
 app.use((req,res,next)=>{
